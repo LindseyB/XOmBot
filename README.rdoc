@@ -11,3 +11,11 @@ XOmBot has the following behaviours:
 
 * announces an applied commit to the main XOmB repo
 * Says "brains..." upon entering a channel and being referred to
+
+
+
+A note about the Net::IRC module: 
+
+There may be a warning on line 141 of IRC.pm because of the do_one_loop. Simply replace this line with the following:
+
+<tt>return if defined($caller) and $caller eq 'Net::IRC::flush_output_queue';</tt>
