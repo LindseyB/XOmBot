@@ -23,7 +23,7 @@ my $conn = $irc->newconn(
 	Username	=> 'bot'
 );
 
-$conn->{channel} = shift || '#xomb';                  # the channel to join on successful connect
+$conn->{channel} = shift || '#testchan';                  # the channel to join on successful connect
 
 
 sub on_connect {
@@ -34,24 +34,6 @@ sub on_connect {
 	$conn->join($conn->{channel});
 	$conn->privmsg($conn->{channel}, 'Brains...');
 	$conn->{connected} = 1;
-}
-
-sub on_join {
-
-	# get our connection object and the event object, which is passed
-	# with this event automatically
-	my ($conn, $event) = @_;
-
-	#maybe do something when a user connects
-	my $nick = $event->{nick};
-}
-
-sub on_part {
-	# don't do anything
-}
-
-sub on_msg {
-	# don't handle PMs
 }
 
 sub on_public {
@@ -106,15 +88,17 @@ sub on_public {
 			$conn->privmsg($conn->{channel}, "Sorry, there's no article by that name");
 		}
 	}
+	
+	if ($text =~ m/^XOmBot:.*/)
+	{
+		$conn->privmsg($conn->{channel}, "$event->{nick}: brains...");
+	}
 
 }
 
 
 
-$conn->add_handler('join', \&on_join);
-$conn->add_handler('part', \&on_part);
 $conn->add_handler('public', \&on_public);
-$conn->add_handler('msg', \&on_msg);
 
 # The end of MOTD (message of the day), numbered 376 signifies we've connected
 $conn->add_handler('376', \&on_connect);
