@@ -3,6 +3,6 @@
 XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
-!wiki article name
+* !wiki article name
 
 where article name links to: http://wiki.xomb.org/index.php?title=article_name
