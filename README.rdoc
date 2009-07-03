@@ -6,3 +6,8 @@ Right now XOmBot accepts the following commands:
 * !wiki article name
 
 where article name links to: http://wiki.xomb.org/index.php?title=article_name
+
+XOmBot has the following behaviours:
+
+* announces an applied commit to the main XOmB repo
+* Says "brains..." upon entering a channel and being referred to
