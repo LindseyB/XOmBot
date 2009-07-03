@@ -18,7 +18,7 @@ my $browser = LWP::UserAgent->new;
 my $conn = $irc->newconn(
 	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
 	Port		=> shift || '6667',                  # the port to use for the connection
-	Nick		=> 'XOmBot',
+	Nick		=> 'XOmBut',
 	Ircname		=> 'Resident XOmbie',
 	Username	=> 'bot'
 );
@@ -46,47 +46,7 @@ sub on_public {
 	if ($text =~ m/^\!wiki\s*([\w*\s]*)/)
 	{
 		#check if article exists in the wiki
-		my $articlename = $1;
-		
-		#replace spaces with _
-		$articlename =~ s/\s/_/gs;
-		
-		my $response = $browser->get("http://wiki.xomb.org/index.php?title=$articlename"); 
-		
-		#check if article exists
-		my $exists = 1;
-		if($response->content =~ m/There is currently no text in this page/)
-		{
-			$exists = 0;
-		}
-		
-		my $content = $response->content;
-
-		# remove the html tags
-		# the following line breaks syntax highlighting :( 
-		$content =~ s/<(?:[^>'"]*|(['"]).*?\1)*>//gs;
-		
-		#replace _ with spaces
-		$articlename =~ s/_/ /gs;
-		
-		if ($response->is_success && $exists == 1)
-		{
-			#try to get a definition
-			if( $content =~ m/($articlename.*?\.)/)
-			{
-				$conn->privmsg($conn->{channel}, $1);
-			}
-			
-			#replace spaces with _
-			$articlename =~ s/\s/_/gs;
-			
-			$conn->privmsg($conn->{channel}, "Full article here: http://wiki.xomb.org/index.php?title=$articlename");
-			
-		}
-		else
-		{
-			$conn->privmsg($conn->{channel}, "Sorry, there's no article by that name");
-		}
+		get_wiki_entry($1);
 	}
 	
 	if ($text =~ m/^XOmBot:.*/)
@@ -95,6 +55,73 @@ sub on_public {
 	}
 
 }
+
+sub get_wiki_entry {
+
+	my $articlename = shift;
+	
+	#replace spaces with _
+	$articlename =~ s/\s/_/gs;
+
+	my $response = $browser->get("http://wiki.xomb.org/index.php?title=$articlename"); 
+
+	#check if article exists
+	my $exists = 1;
+	if($response->content =~ m/There is currently no text in this page/)
+	{
+		$exists = 0;
+	}
+
+	my $content = $response->content;
+
+	# remove the html tags
+	# the following line breaks syntax highlighting in intype :( 
+	$content =~ s/<(?:[^>'"]*|(['"]).*?\1)*>//gs;
+
+	#replace _ with spaces
+	$articlename =~ s/_/ /gs;
+
+	if ($response->is_success && $exists)
+	{
+		#try to get a definition
+		if( $content =~ m/($articlename.*?\.)/)
+		{
+			$conn->privmsg($conn->{channel}, $1);
+		}
+
+		#replace spaces with _
+		$articlename =~ s/\s/_/gs;
+
+		$conn->privmsg($conn->{channel}, "Full article here: http://wiki.xomb.org/index.php?title=$articlename");
+	}
+	else
+	{
+		$conn->privmsg($conn->{channel}, "Sorry, there's no article by that name");
+		# try to search for similar articles
+		search_for_article($articlename);
+	}
+
+}
+
+sub search_for_article {
+
+	my $searchterm = shift;
+	
+	#replace spaces with +
+	$searchterm =~ s/\s/\+/gs;
+	
+	my $response = $browser->get("http://wiki.xomb.org/index.php?search=$searchterm&go=Go");
+	
+	if($response->is_success)
+	{
+		if($response->content =~ m/<li><a href="\/index\.php\?title=(\w*)/)
+		{
+			$conn->privmsg($conn->{channel}, "Did you mean $1: http://wiki.xomb.org/index.php?title=$1");	
+		}
+	}
+
+}
+
 
 
 
