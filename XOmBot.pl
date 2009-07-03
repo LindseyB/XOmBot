@@ -139,13 +139,13 @@ sub check_rss {
 				$commitid = $1;
 				
 				# get try to get the info to announce it
-				if($response->content =~ m/<title>(.*)<\/title>?/)
+				if($response->content =~ m/<entry>.*<title>(.*)<\/title>?/)
 				{
 					$commit_msg = $1;
 				}
 
 				# get try to get the info to announce it
-				if($response->content =~ m/<name>(\w*)<\/name>?/)
+				if($response->content =~ m/<name>(\w*)<\/name>/)
 				{
 					$commiter = $1;
 				}				
