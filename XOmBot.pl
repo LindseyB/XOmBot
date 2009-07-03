@@ -8,22 +8,23 @@
 
 use Net::IRC;
 use LWP 5.64;
-use Time::HiRes qw( usleep gettimeofday tv_interval stat );
 use strict;
 
 
 my $irc = new Net::IRC;
 my $browser = LWP::UserAgent->new;
+my $commitid = "";
 
 my $conn = $irc->newconn(
 	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
 	Port		=> shift || '6667',                  # the port to use for the connection
-	Nick		=> 'XOmBut',
+	Nick		=> 'XOmButt',
 	Ircname		=> 'Resident XOmbie',
 	Username	=> 'bot'
 );
 
 $conn->{channel} = shift || '#testchan';                  # the channel to join on successful connect
+
 
 
 sub on_connect {
@@ -107,7 +108,7 @@ sub search_for_article {
 
 	my $searchterm = shift;
 	
-	#replace spaces with +
+	# replace spaces with +
 	$searchterm =~ s/\s/\+/gs;
 	
 	my $response = $browser->get("http://wiki.xomb.org/index.php?search=$searchterm&go=Go");
@@ -122,6 +123,39 @@ sub search_for_article {
 
 }
 
+sub check_rss {
+
+	my $response = $browser->get("http://github.com/feeds/LindseyB/commits/XOmBot/master");
+
+	if($response->is_success && $response->content =~ m/<entry>\s*<id>.*\/(\w*)<\/id>/)
+	{
+			my $commiter = "Unknown";
+			my $commit_msg = "Unspecified";
+			
+			
+			#if it's not the last one we announced
+			if($commitid ne $1)
+			{
+				$commitid = $1;
+				
+				# get try to get the info to announce it
+				if($response->content =~ m/<title>(.*)<\/title>?/)
+				{
+					$commit_msg = $1;
+				}
+
+				# get try to get the info to announce it
+				if($response->content =~ m/<name>(\w*)<\/name>?/)
+				{
+					$commiter = $1;
+				}				
+				
+				$conn->privmsg($conn->{channel}, "Commit made by $commiter: $commit_msg");
+				$conn->privmsg($conn->{channel}, "View: http://github.com/LindseyB/XOmBot/commit/$commitid");
+			}
+	}
+
+}
 
 
 
@@ -136,6 +170,7 @@ while(1) {
 
 	
 	# check the RSS
+	check_rss();
 	
 	$irc->do_one_loop();
 }
