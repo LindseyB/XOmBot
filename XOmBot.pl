@@ -139,7 +139,7 @@ sub check_rss {
 				$commitid = $1;
 				
 				# get try to get the info to announce it
-				if($response->content =~ m/<entry>.*<title>(.*)<\/title>?/)
+				if($response->content =~ m/<entry>.*<title>(.*)<\/title>?/s)
 				{
 					$commit_msg = $1;
 				}
