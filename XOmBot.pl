@@ -125,7 +125,7 @@ sub search_for_article {
 
 sub check_rss {
 
-	my $response = $browser->get("http://github.com/feeds/LindseyB/commits/XOmBot/master");
+	my $response = $browser->get("http://github.com/feeds/xomboverlord/commits/xomb/master");
 
 	if($response->is_success && $response->content =~ m/<entry>\s*<id>.*\/(\w*)<\/id>/)
 	{
@@ -142,7 +142,6 @@ sub check_rss {
 				if($response->content =~ m/<entry>.*?<title>(.*?)<\/title>/s)
 				{
 					$commit_msg = $1;
-					print $commit_msg;
 				}
 
 				# get try to get the info to announce it
@@ -152,7 +151,7 @@ sub check_rss {
 				}				
 				
 				$conn->privmsg($conn->{channel}, "Commit made by $commiter: $commit_msg");
-				$conn->privmsg($conn->{channel}, "View: http://github.com/LindseyB/XOmBot/commit/$commitid");
+				$conn->privmsg($conn->{channel}, "View: http://github.com/xomboverlord/xomb/commit/$commitid");
 			}
 	}
 
