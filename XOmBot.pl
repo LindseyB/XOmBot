@@ -23,7 +23,7 @@ my $conn = $irc->newconn(
 	Username	=> 'bot'
 );
 
-$conn->{channel} = shift || '#testchan';                  # the channel to join on successful connect
+$conn->{channel} = shift || '#xomb';                 # the channel to join on successful connect
 
 
 
