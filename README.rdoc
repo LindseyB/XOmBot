@@ -1,4 +1,5 @@
 = XOmBot
+----
 
 XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
