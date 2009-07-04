@@ -23,7 +23,7 @@ my $conn = $irc->newconn(
 	Username	=> 'bot'
 );
 
-$conn->{channel} = shift || '#xomb';                  # the channel to join on successful connect
+$conn->{channel} = shift || '#testchan';                  # the channel to join on successful connect
 
 
 
@@ -64,11 +64,12 @@ sub get_wiki_entry {
 	#replace spaces with _
 	$articlename =~ s/\s/_/gs;
 
-	my $response = $browser->get("http://wiki.xomb.org/index.php?title=$articlename"); 
+	# searching for the article rather than going directly to it allows us to ignore the issue of case sensitivity
+	my $response = $browser->get("http://wiki.xomb.org/index.php?search=$articlename&go=Go");
 
 	#check if article exists
 	my $exists = 1;
-	if($response->content =~ m/There is currently no text in this page/)
+	if($response->content =~ m/There is no page titled/)
 	{
 		$exists = 0;
 	}
@@ -84,8 +85,9 @@ sub get_wiki_entry {
 
 	if ($response->is_success && $exists)
 	{
-		#try to get a definition
-		if( $content =~ m/($articlename.*?\.)/)
+		# try to get a definition
+		# TODO: expand the following regex to include small beginning words
+		if( $content =~ m/($articlename.*?\.)/i)
 		{
 			$conn->privmsg($conn->{channel}, $1);
 		}
@@ -144,7 +146,7 @@ sub check_rss {
 					$commit_msg = $1;
 				}
 
-				# get try to get the info to announce it
+				# get try to get the author to announce it
 				if($response->content =~ m/<name>(\w*)<\/name>/)
 				{
 					$commiter = $1;
