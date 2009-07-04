@@ -61,8 +61,8 @@ sub get_wiki_entry {
 
 	my $articlename = shift;
 	
-	#replace spaces with _
-	$articlename =~ s/\s/_/gs;
+	#replace spaces with +
+	$articlename =~ s/\s/\+/gs;
 
 	# searching for the article rather than going directly to it allows us to ignore the issue of case sensitivity
 	my $response = $browser->get("http://wiki.xomb.org/index.php?search=$articlename&go=Go");
@@ -80,8 +80,8 @@ sub get_wiki_entry {
 	# the following line breaks syntax highlighting in intype :( 
 	$content =~ s/<(?:[^>'"]*|(['"]).*?\1)*>//gs;
 
-	#replace _ with spaces
-	$articlename =~ s/_/ /gs;
+	#replace + with spaces
+	$articlename =~ s/\+/ /gs;
 
 	if ($response->is_success && $exists)
 	{
@@ -94,7 +94,7 @@ sub get_wiki_entry {
 		#replace spaces with _
 		$articlename =~ s/\s/_/gs;
 
-		$conn->privmsg($conn->{channel}, "Full article here: http://wiki.xomb.org/index.php?title=$articlename");
+		$conn->privmsg($conn->{channel}, "Full article here: " . $response->base);
 	}
 	else
 	{
