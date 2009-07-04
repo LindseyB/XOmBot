@@ -86,8 +86,7 @@ sub get_wiki_entry {
 	if ($response->is_success && $exists)
 	{
 		# try to get a definition
-		# TODO: expand the following regex to include small beginning words
-		if( $content =~ m/($articlename.*?\.)/i)
+		if( $content =~ m/(.*?$articlename.*?\.)/i)
 		{
 			$conn->privmsg($conn->{channel}, $1);
 		}
