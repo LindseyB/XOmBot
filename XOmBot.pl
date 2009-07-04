@@ -46,8 +46,14 @@ sub on_public {
 	
 	if ($text =~ m/^\!wiki\s*([\w*\s]*)/)
 	{
-		#check if article exists in the wiki
+		# check if article exists in the wiki
 		get_wiki_entry($1);
+	}
+	
+	if($text =~ m/^\!latest.*/)
+	{
+		# show the latest commit the next loop around
+		$commitid = "";
 	}
 	
 	if ($text =~ m/^XOmBot:.*/)

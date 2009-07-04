@@ -3,9 +3,9 @@
 XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
-* !wiki article name
+* !wiki article name : will attempt to find a wiki article of that name and provide a definition
+* !latest            : will provide information for the latest commit
 
-where article name links to: http://wiki.xomb.org/index.php?title=article_name
 
 XOmBot has the following behaviours:
 
