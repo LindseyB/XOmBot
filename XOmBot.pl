@@ -17,7 +17,7 @@ my $commitid = "";
 
 my $conn = $irc->newconn(
 	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
-	Port		=> shift || '6667',                  # the port to use for the connection
+	Port		=> shift || '8001',                  # the port to use for the connection
 	Nick		=> 'XOmBot',
 	Ircname		=> 'Resident XOmbie',
 	Username	=> 'bot'
@@ -33,7 +33,7 @@ sub on_connect {
 	my $conn = shift;
 
 	$conn->join($conn->{channel});
-	$conn->privmsg($conn->{channel}, 'Brains...');
+	$conn->privmsg($conn->{channel}, 'XOmBot is online. !commands will show what I can do.');
 	$conn->{connected} = 1;
 }
 
@@ -54,6 +54,13 @@ sub on_public {
 	{
 		# show the latest commit the next loop around
 		$commitid = "";
+	}
+
+	if($text =~ m/^\!commands.*/)
+	{
+		# show all the commands that xombot listens to
+		$conn->privmsg($conn->{channel}, "!wiki [search term] - will search the wiki for the given word or phrase.");
+		$conn->privmsg($conn->{channel}, "!latest - will show the last commit to the offical XOmB repository.");
 	}
 	
 	if ($text =~ m/^XOmBot:.*/)
