@@ -15,6 +15,9 @@ XOmBot has the following behaviours:
 * says "brains..." when directly refered to (ie: XOmBot: message)
 
 
+
+----
+
 A note about the Net::IRC module: 
 
 There may be a warning on line 141 of IRC.pm because of the do_one_loop. Simply replace this line with the following:
