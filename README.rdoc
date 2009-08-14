@@ -4,15 +4,15 @@
 XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
-* !wiki article name : will attempt to find a wiki article of that name and provide a definition
-* !latest            : will provide information for the latest commit
-
+* !wiki article name: will attempt to find a wiki article of that name and provide a definition
+* !latest: will provide information for the latest commit
+* !commands: will list the commands XOmBot listens for and what they do			
 
 XOmBot has the following behaviours:
 
 * announces an applied commit to the main XOmB repo
-* Says "brains..." upon entering a channel and being referred to
-
+* informs the channel of the !commands command upon entering a channel
+* says "brains..." when directly refered to (ie: XOmBot: message)
 
 
 A note about the Net::IRC module: 
