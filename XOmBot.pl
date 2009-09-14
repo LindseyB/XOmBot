@@ -49,6 +49,11 @@ sub on_public {
 		# check if article exists in the wiki
 		get_wiki_entry($1);
 	}
+
+	if($text eq "hi" and $event->{nick} eq "duckinator")
+	{
+		$conn->privmsg($conn->{channel}, "duckinator: hi");
+	}
 	
 	if($text =~ m/^\!latest.*/)
 	{
@@ -145,11 +150,12 @@ sub check_rss {
 	{
 			my $commiter = "Unknown";
 			my $commit_msg = "Unspecified";
-			
+			my $orig_commitid = $commitid;			
 			
 			#if it's not the last one we announced
 			if($commitid ne $1)
 			{
+
 				$commitid = $1;
 				
 				# get try to get the info to announce it
@@ -164,8 +170,16 @@ sub check_rss {
 					$commiter = $1;
 				}				
 				
-				$conn->privmsg($conn->{channel}, "Commit made by $commiter: $commit_msg");
-				$conn->privmsg($conn->{channel}, "View: http://github.com/xomboverlord/xomb/commit/$commitid");
+				if($commit_msg ne "Sorry, this commit log is taking too long to generate.")
+				{
+					$conn->privmsg($conn->{channel}, "Commit made by $commiter: $commit_msg");
+					$conn->privmsg($conn->{channel}, "View: http://github.com/xomboverlord/xomb/commit/$commitid");
+				}
+				else
+				{
+					# we don't know if there actually was a new commit
+					$commitid = $orig_commitid;
+				}
 			}
 	}
 
