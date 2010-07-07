@@ -13,7 +13,7 @@ XOmBot has the following behaviours:
 * announces an applied commit to the main XOmB repo
 * informs the channel of the !commands command upon entering a channel
 * says "brains..." when directly refered to (ie: XOmBot: message)
-
+* displays the title of any valid http:// urls displayed in the channel
 
 
 ----
