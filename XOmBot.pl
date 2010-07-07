@@ -6,6 +6,9 @@
 # Your friendly XOmB bot for #xomb                                              #
 #################################################################################
 
+use lib '/home/lindsey/modules/share/perl5/site_perl';
+use lib '/home/lindsey/modules/share/perl5';
+use lib '/home/lindsey/modules/lib/perl5/site_perl';
 use Net::IRC;
 use LWP 5.64;
 use strict;
