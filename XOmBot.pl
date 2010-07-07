@@ -43,6 +43,11 @@ sub on_public {
 
 	# grab what was said
 	my $text = $event->{args}[0];
+
+	if($text =~ m/(http:\/\/[^ ]*)/)
+	{
+	  display_title($1);
+	}
 	
 	if ($text =~ m/^\!wiki\s*([\w*\s]*)/)
 	{
@@ -121,6 +126,20 @@ sub get_wiki_entry {
 		search_for_article($articlename);
 	}
 
+}
+
+sub display_title {
+  my $url = shift;
+		
+	my $response = $browser->get("$url");
+		
+	if($response->is_success)
+	{
+	  if($response->content =~ m/<title>(.+)<\/title>/gsi)
+		{
+		  $conn->privmsg($conn->{channel}, "\"$1\"");	
+		}
+	}
 }
 
 sub search_for_article {
