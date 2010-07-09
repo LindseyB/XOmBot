@@ -142,7 +142,8 @@ sub display_title {
 			$title =~ s/\s/ /gs;
 			$title =~ s/ +/ /gs;
 
-			chomp $title;
+			$title =~ s/^ //;
+			$title =~ s/ $//;
 
 		  $conn->privmsg($conn->{channel}, "\"$title\"");	
 		}
