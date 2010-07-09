@@ -18,12 +18,12 @@ my $commitid = "";
 my $conn = $irc->newconn(
 	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
 	Port		=> shift || '8001',                  # the port to use for the connection
-	Nick		=> 't3hp1ck',
+	Nick		=> 'XOmBot',
 	Ircname		=> 'Resident XOmbie',
 	Username	=> 'bot'
 );
 
-$conn->{channel} = shift || '#bottest';                 # the channel to join on successful connect
+$conn->{channel} = shift || '#xomb';                 # the channel to join on successful connect
 
 
 
