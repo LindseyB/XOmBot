@@ -47,7 +47,7 @@ sub on_public {
 	# grab what was said
 	my $text = $event->{args}[0];
 
-	if($text =~ m/(http:\/\/[^ ]*)/)
+	if($text =~ m{(http://[^ ]*)})
 	{
 	  display_title($1);
 	}
@@ -138,9 +138,17 @@ sub display_title {
 		
 	if($response->is_success)
 	{
-	  if($response->content =~ m/<title>(.+)<\/title>/gsi)
+	  if($response->content =~ m/<title>(.+)<\/title>/si)
 		{
-		  $conn->privmsg($conn->{channel}, "\"$1\"");	
+			my($title) = $1;
+
+			$title =~ s/\s/ /gs;
+			$title =~ s/ +/ /gs;
+
+			$title =~ s/^ //;
+			$title =~ s/ $//;
+
+		  $conn->privmsg($conn->{channel}, "\"$title\"");	
 		}
 	}
 }
