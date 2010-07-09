@@ -18,12 +18,12 @@ my $commitid = "";
 my $conn = $irc->newconn(
 	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
 	Port		=> shift || '8001',                  # the port to use for the connection
-	Nick		=> 'XOmBot',
+	Nick		=> 't3hp1ck',
 	Ircname		=> 'Resident XOmbie',
 	Username	=> 'bot'
 );
 
-$conn->{channel} = shift || '#xomb';                 # the channel to join on successful connect
+$conn->{channel} = shift || '#bottest';                 # the channel to join on successful connect
 
 
 
@@ -44,7 +44,7 @@ sub on_public {
 	# grab what was said
 	my $text = $event->{args}[0];
 
-	if($text =~ m/(http:\/\/[^ ]*)/)
+	if($text =~ m{(http://[^ ]*)})
 	{
 	  display_title($1);
 	}
@@ -135,9 +135,16 @@ sub display_title {
 		
 	if($response->is_success)
 	{
-	  if($response->content =~ m/<title>(.+)<\/title>/gsi)
+	  if($response->content =~ m/<title>(.+)<\/title>/si)
 		{
-		  $conn->privmsg($conn->{channel}, "\"$1\"");	
+			my($title) = $1;
+
+			$title =~ s/\s/ /gs;
+			$title =~ s/ +/ /gs;
+
+			chomp $title;
+
+		  $conn->privmsg($conn->{channel}, "\"$title\"");	
 		}
 	}
 }
