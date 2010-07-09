@@ -18,12 +18,12 @@ my $commitid = "";
 my $conn = $irc->newconn(
 	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
 	Port		=> shift || '8001',                  # the port to use for the connection
-	Nick		=> 'XOmBot',
+	Nick		=> 't3hp1ck',
 	Ircname		=> 'Resident XOmbie',
 	Username	=> 'bot'
 );
 
-$conn->{channel} = shift || '#xomb';                 # the channel to join on successful connect
+$conn->{channel} = shift || '##l2l';                 # the channel to join on successful connect
 
 
 
@@ -44,38 +44,48 @@ sub on_public {
 	# grab what was said
 	my $text = $event->{args}[0];
 
-	if($text =~ m{(http://[^ ]*)})
-	{
+	if($text =~ m{(http://[^ ]*)}){
 	  display_title($1);
 	}
 	
-	if ($text =~ m/^\!wiki\s*([\w*\s]*)/)
-	{
+	if ($text =~ m/^\!wiki\s*([\w*\s]*)/){
 		# check if article exists in the wiki
 		get_wiki_entry($1);
 	}
 
-	if($text eq "hi" and $event->{nick} eq "duckinator")
-	{
+	if($text eq "hi" and $event->{nick} eq "duckinator"){
 		$conn->privmsg($conn->{channel}, "duckinator: hi");
 	}
 	
-	if($text =~ m/^\!latest.*/)
-	{
+	if($text =~ m/^\!latest.*/){
 		# show the latest commit the next loop around
 		$commitid = "";
 	}
 
-	if($text =~ m/^\!commands.*/)
-	{
+	if($text =~ m/^\!commands.*/){
 		# show all the commands that xombot listens to
 		$conn->privmsg($conn->{channel}, "!wiki [search term] - will search the wiki for the given word or phrase.");
 		$conn->privmsg($conn->{channel}, "!latest - will show the last commit to the offical XOmB repository.");
 	}
 	
-	if ($text =~ m/^XOmBot:.*/)
-	{
-		$conn->privmsg($conn->{channel}, "$event->{nick}: brains...");
+	if ($text =~ m/^XOmBot:(.*)/){
+		my($compliment) = $1;
+		
+		if($compliment =~ m/good/){
+				$conn->privmsg($conn->{channel}, "/me drools");
+		}elsif($compliment =~ m/bad/){
+				$conn->privmsg($conn->{channel}, "/me cowers");
+		}elsif($compliment =~ m/google (.*) for (.*)/){
+				my($term) = $1;
+				my($target) = $2;
+
+				$term =~ s/ /+/g;
+
+				$conn->privmsg($conn->{channel}, "$target: http://lmgtfy.com/?q=$term");
+
+		}else{
+				$conn->privmsg($conn->{channel}, "$event->{nick}: brains...");
+		}
 	}
 
 }
