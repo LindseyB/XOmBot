@@ -14,10 +14,13 @@ use URI::Title qw( title );
 use URI::Find::Simple qw( list_uris );
 use LWP 5.64;
 
-my($thechannel) = '##l2l';
+my($thechannel) = '#bottest';
 my $browser = LWP::UserAgent->new;
 my $commitid = "";
 my $first = 1;
+
+my $good = 0;
+my $bad = 0;
 
 my ($bot) = Bot->new(
 		server => "irc.freenode.net",
@@ -47,50 +50,72 @@ sub said {
 		my $channel = $message->{channel};
 		my $address = $message->{address};
 
+		# --- url announce ---
 		if(my @urls = list_uris($body)){
-				#$self->say(channel => $channel, body => title($_)) for (@urls);
-				#$self->reply($message, title($_)) for (@urls);
-				display_title($_) for (@urls);
+				$self->reply($message, title($_)) for (@urls);
+		}
+
+		# --- command list ---
+		if($body =~ m/^\!commands/){
+				# show all the commands that xombot listens to
+				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
+				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
 		}
 
 		if ($body =~ m/^\!wiki\s*([\w*\s]*)/){
 				# check if article exists in the wiki
 				get_wiki_entry($1);
 		}
-
-		if($body eq "hi" and $nick eq "duckinator"){
-				$self->say(channel => $channel, who => $nick, body => "hi", address => "1");
-		}
 		
-		if($body =~ m/^\!latest.*/){
+		if($body =~ m/^\!latest/){
 				# show the latest commit the next loop around
 				$commitid = "";
 		}
 
-		if($body =~ m/^\!commands.*/){
-				# show all the commands that xombot listens to
-				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
-				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
+		if($body =~ m/^\!google (.*) for (.*)/){
+				my($term) = $1;
+				my($target) = $2;
+						
+				$term =~ s/ /+/g;
+						
+				$self->say(channel => $channel, who => $target, address => "1", body => "http://lmgtfy.com/?q=$term");
 		}
-	
-		if ($address){ #($body =~ m/^XOmBot:(.*)/){
-				my($compliment) = $body;
-		
-				if($compliment =~ m/good/){
-						$self->emote(channel => $channel, body => "drools");
-				}elsif($compliment =~ m/bad/){
-						$self->emote(channel => $channel, body => "cowers");
-				}elsif($compliment =~ m/google (.*) for (.*)/){
-						my($term) = $1;
-						my($target) = $2;
-						
-						$term =~ s/ /+/g;
-						
-						$self->say(channel => $channel, who => $target, address => "1", body => "http://lmgtfy.com/?q=$term");
-						
+
+		if($body =~ m/^\!santa/){
+				if($good >= $bad){
+						$self->emote(channel => $channel, body => "has been a good robotic zombie");
 				}else{
-						$self->say(channel => $channel, who => $nick, address => "1", body => "brains...");
+						$self->emote(channel => $channel, body => "is getting coal in its stocking");
 				}
+		}
+
+		# --- miscellaneous behaviors ---
+
+		# annoy duck
+		if($body eq "hi" and $nick eq "duckinator"){
+				$self->say(channel => $channel, who => $nick, body => "hi", address => "1");
+		}
+
+		my($respondedFlag) = 0;
+
+		if ($body =~ m/XOmBot/){
+				my $compliment = $body;
+
+				if($compliment =~ m/good/ || $compliment =~ m/cookie/){
+						$self->emote(channel => $channel, body => "drools");
+
+						$good++;
+						$respondedFlag = 1;
+				}elsif($compliment =~ m/bad/ || $compliment =~ m/spank/){
+						$self->emote(channel => $channel, body => "cowers");
+
+						$bad++;
+						$respondedFlag = 1;
+				}
+		}
+
+		if($address && !$respondedFlag){
+				$self->say(channel => $channel, who => $nick, address => "1", body => "brains...");
 		}
 
 		return undef;
@@ -133,30 +158,6 @@ sub check_rss {
 		}
 }
 
-
-sub display_title {
-  my $url = shift;
-
-	#$bot->say(channel => $thechannel, body => $url);
-		
-	my $response = $browser->get("$url");
-	
-	if($response->is_success){
-			$bot->say(channel => $thechannel, body => ($response->content) );
-			
-			if($response->content =~ m/<title>(.+)<\/title>/si){
-					my($title) = $1;
-					
-					$title =~ s/\s/ /gs;
-					$title =~ s/ +/ /gs;
-					
-					$title =~ s/^ //;
-					$title =~ s/ $//;
-					
-					$bot->say(channel => $thechannel, body => "\"$title\"");	
-			}
-	}
-}
 
 
 sub get_wiki_entry {
