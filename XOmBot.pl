@@ -14,7 +14,9 @@ use URI::Title qw( title );
 use URI::Find::Simple qw( list_uris );
 use LWP 5.64;
 
-my($thechannel) = '#xomb';
+my($businessChannel) = '#xomb';
+my($pleasureChannel) = '##l2l';
+my $mynick = 'XOmBot';
 my $browser = LWP::UserAgent->new;
 my $commitid = "";
 my $first = 1;
@@ -25,8 +27,8 @@ my $bad = 0;
 my ($bot) = Bot->new(
 		server => "irc.freenode.net",
 		port => "8001",
-		channels => [ $thechannel ],
-		nick => 'XOmBot',
+		channels => [ $businessChannel, $pleasureChannel ],
+		nick => $mynick,
 		charset => 'utf-8',
 		);
 
@@ -34,7 +36,7 @@ $bot->run();
 
 sub connected {
 		my $self = shift;
-		$self->say(channel => $thechannel, body => 'XOmBot is online. !commands will show what I can do.');
+		$self->say(channel => $_, body => '$mynick is online. !commands will show what I can do.') for (@{$self->{channels}});
 }
 
 sub tick {
@@ -60,11 +62,13 @@ sub said {
 				# show all the commands that xombot listens to
 				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
 				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
+				$self->say(channel => $channel, body => "!google [phrase] for [nick] - answer questions.");
+				$self->say(channel => $channel, body => "!santa - ask santa whether $mynick has been naughty or nice.");
 		}
 
 		if ($body =~ m/^\!wiki\s*([\w*\s]*)/){
 				# check if article exists in the wiki
-				get_wiki_entry($1);
+				get_wiki_entry($1, $channel);
 		}
 		
 		if($body =~ m/^\!latest/){
@@ -83,9 +87,9 @@ sub said {
 
 		if($body =~ m/^\!santa/){
 				if($good >= $bad){
-						$self->emote(channel => $channel, body => "has been a good robotic zombie");
+						$self->emote(channel => $channel, body => "has been a good little robotic zombie");
 				}else{
-						$self->emote(channel => $channel, body => "is getting coal in its stocking");
+						$self->emote(channel => $channel, body => "is getting coal in its metal stocking");
 				}
 		}
 
@@ -98,7 +102,7 @@ sub said {
 
 		my($respondedFlag) = 0;
 
-		if ($body =~ m/XOmBot/){
+		if ($body =~ m/$mynick/){
 				my $compliment = $body;
 
 				if($compliment =~ m/good/ || $compliment =~ m/cookie/){
@@ -145,8 +149,8 @@ sub check_rss {
 				
 						if($commit_msg ne "Sorry, this commit log is taking too long to generate."){
 								unless($first){
-										$bot->say(channel => $thechannel, body => "Commit made by $commiter: $commit_msg");
-										$bot->say(channel => $thechannel, body => "View: http://github.com/xomboverlord/xomb/commit/$commitid");
+										$bot->say(channel => $businessChannel, body => "Commit made by $commiter: $commit_msg");
+										$bot->say(channel => $businessChannel, body => "View: http://github.com/xomboverlord/xomb/commit/$commitid");
 								}else{
 										$first = 0;
 								}
@@ -161,9 +165,9 @@ sub check_rss {
 
 
 sub get_wiki_entry {
-
 	my $articlename = shift;
-	
+	my $channel = shift;
+
 	#replace spaces with +
 	$articlename =~ s/\s/\+/gs;
 
@@ -191,27 +195,27 @@ sub get_wiki_entry {
 		# try to get a definition
 		if( $content =~ m/(.*?$articlename.*?\.)/i)
 		{
-			$bot->say(channel => $thechannel, body => $1);
+			$bot->say(channel => $channel, body => $1);
 		}
 
 		#replace spaces with _
 		$articlename =~ s/\s/_/gs;
 
-		$bot->say(channel => $thechannel, body => "Full article here: " . $response->base);
+		$bot->say(channel => $channel, body => "Full article here: " . $response->base);
 	}
 	else
 	{
-		$bot->say(channel => $thechannel, body => "Sorry, there's no article by that name");
+		$bot->say(channel => $channel, body => "Sorry, there's no article by that name");
 		# try to search for similar articles
-		search_for_article($articlename);
+		search_for_article($articlename, $channel);
 	}
 
 }
 
 sub search_for_article {
-
 	my $searchterm = shift;
-	
+	my $channel = shift;
+
 	# replace spaces with +
 	$searchterm =~ s/\s/\+/gs;
 	
@@ -221,7 +225,7 @@ sub search_for_article {
 	{
 		if($response->content =~ m/<li><a href="\/index\.php\?title=(\w*)/)
 		{
-			$bot->say(channel => $thechannel, body => "Did you mean $1: http://wiki.xomb.org/index.php?title=$1");	
+			$bot->say(channel => $channel, body => "Did you mean $1: http://wiki.xomb.org/index.php?title=$1");	
 		}
 	}
 
