@@ -14,7 +14,7 @@ use URI::Title qw( title );
 use URI::Find::Simple qw( list_uris );
 use LWP 5.64;
 
-my($thechannel) = '#bottest';
+my($thechannel) = '#xomb';
 my $browser = LWP::UserAgent->new;
 my $commitid = "";
 my $first = 1;
@@ -26,7 +26,7 @@ my ($bot) = Bot->new(
 		server => "irc.freenode.net",
 		port => "8001",
 		channels => [ $thechannel ],
-		nick => 't3hp1ck',
+		nick => 'XOmBot',
 		charset => 'utf-8',
 		);
 
