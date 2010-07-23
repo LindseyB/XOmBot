@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 #################################################################################
-# XomBot.pl                                                                     #
+# XomBot.pl [nick]                                                              #
 #                                                                               #
 # Your friendly XOmB bot for #xomb                                              #
 #################################################################################
@@ -16,7 +16,7 @@ use LWP 5.64;
 
 my($businessChannel) = '#xomb';
 my($pleasureChannel) = '##l2l';
-my $mynick = 'XOmBot';
+my $mynick = shift || 'XOmBot';
 my $browser = LWP::UserAgent->new;
 my $commitid = "";
 my $first = 1;
@@ -36,7 +36,7 @@ $bot->run();
 
 sub connected {
 		my $self = shift;
-		$self->say(channel => $_, body => '$mynick is online. !commands will show what I can do.') for (@{$self->{channels}});
+		$self->say(channel => $_, body => "$mynick is online. !commands will show what I can do.") for (@{$self->{channels}});
 }
 
 sub tick {
@@ -63,7 +63,7 @@ sub said {
 				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
 				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
 				$self->say(channel => $channel, body => "!google [phrase] for [nick] - answer questions.");
-				$self->say(channel => $channel, body => "!santa - ask santa whether $mynick has been naughty or nice.");
+				$self->say(channel => $channel, body => "!santa - ask Santa whether $mynick has been naughty or nice.");
 		}
 
 		if ($body =~ m/^\!wiki\s*([\w*\s]*)/){
