@@ -63,6 +63,7 @@ sub said {
 				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
 				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
 				$self->say(channel => $channel, body => "!google [phrase] for [nick] - answer questions.");
+				$self->say(channel => $channel, body => "!coinflip - ...");
 				$self->say(channel => $channel, body => "!santa - ask Santa whether $mynick has been naughty or nice.");
 		}
 
@@ -85,6 +86,21 @@ sub said {
 				$self->say(channel => $channel, who => $target, address => "1", body => "http://lmgtfy.com/?q=$term");
 		}
 
+		if($body =~ m/^\!coinflip/){
+				my $outcome;
+
+				if($body =~ m/^\!coinflip.* heads (.*) tails (.*)/){
+						$outcome = $1;
+						$outcome = $2 if int(rand(2)) == 1;
+				}else{
+						$outcome = "heads";
+						$outcome = "tails" if int(rand(2)) == 1;
+				}
+
+				#$self->say(channel => $channel, who => $nick, address => "1", body => "$outcome");
+				$self->say(channel => $channel, body => "$outcome");
+		}
+
 		if($body =~ m/^\!santa/){
 				if($good >= $bad){
 						$self->emote(channel => $channel, body => "has been a good little robotic zombie");
@@ -102,15 +118,15 @@ sub said {
 
 		my($respondedFlag) = 0;
 
-		if ($body =~ m/$mynick/){
+		if ($address || $body =~ m/$mynick/){
 				my $compliment = $body;
 
-				if($compliment =~ m/good/ || $compliment =~ m/cookie/){
+				if($compliment =~ m/good/i || $compliment =~ m/cookie/i){
 						$self->emote(channel => $channel, body => "drools");
 
 						$good++;
 						$respondedFlag = 1;
-				}elsif($compliment =~ m/bad/ || $compliment =~ m/spank/){
+				}elsif($compliment =~ m/bad/i || $compliment =~ m/spank/i){
 						$self->emote(channel => $channel, body => "cowers");
 
 						$bad++;
