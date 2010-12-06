@@ -54,7 +54,9 @@ sub said {
 
 		# --- url announce ---
 		if(my @urls = list_uris($body)){
-				$self->reply($message, title($_)) for (@urls);
+				if($nick ne "github-xombot"){
+						$self->reply($message, title($_)) for (@urls);
+				}
 		}
 
 		# --- command list ---
@@ -121,7 +123,7 @@ sub said {
 		if ($address || $body =~ m/$mynick/){
 				my $compliment = $body;
 
-				if($compliment =~ m/good/i || $compliment =~ m/cookie/i){
+				if($compliment =~ m/good/i || $compliment =~ m/cookie/i || $compliment =~ m/<3/){
 						$self->emote(channel => $channel, body => "drools");
 
 						$good++;
@@ -142,7 +144,7 @@ sub said {
 }
 
 sub check_rss {
-		my $response = $browser->get("http://github.com/feeds/xomboverlord/commits/xomb/master");
+		my $response = $browser->get("http://github.com/feeds/xomboverlord/commits/xomb/unborn");
 
 		if($response->is_success && $response->content =~ m/<entry>\s*<id>.*\/(\w*)<\/id>/){
 				my $commiter = "Unknown";
