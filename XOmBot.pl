@@ -27,7 +27,7 @@ my $bad = 0;
 my ($bot) = Bot->new(
 		server => "irc.freenode.net",
 		port => "8001",
-		channels => [ $businessChannel, $pleasureChannel ],
+		channels => [ $businessChannel, $pleasureChannel , "##IwantAkitty"],
 		nick => $mynick,
 		charset => 'utf-8',
 		);
