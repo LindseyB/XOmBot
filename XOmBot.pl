@@ -60,7 +60,7 @@ sub said {
 		}
 
 		# --- command list ---
-		if($body =~ m/^\!commands/){
+		if($body =~ m/^\!commands/ || $body =~ m/^\!h.lp/i){
 				# show all the commands that xombot listens to
 				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
 				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
