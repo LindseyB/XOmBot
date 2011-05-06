@@ -40,7 +40,7 @@ sub connected {
 }
 
 sub tick {
-		check_rss();
+		#check_rss();
 		return 60;
 }
 
