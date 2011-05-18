@@ -79,7 +79,7 @@ sub said {
 				$commitid = "";
 		}
 
-		if($body =~ m/^\!(!?)google(!?) (.*) for (.*)/){
+		if($body =~ m/^\!(!*)google(!*) (.*) for (.*)/){
 				my($term) = $3;
 				my($target) = $4;
 				my($lucky);
