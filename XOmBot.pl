@@ -1,92 +1,191 @@
 #!/usr/bin/perl -w
 
 #################################################################################
-# XomBot.pl                                                                     #
+# XomBot.pl [nick]                                                              #
 #                                                                               #
 # Your friendly XOmB bot for #xomb                                              #
 #################################################################################
 
-use lib '/home/lindsey/modules/share/perl5/site_perl';
-use lib '/home/lindsey/modules/share/perl5';
-use lib '/home/lindsey/modules/lib/perl5/site_perl';
-use Net::IRC;
-use LWP 5.64;
+package Bot;
+use base qw(Bot::BasicBot);
+use warnings;
 use strict;
+use URI::Title qw( title );
+use URI::Find::Simple qw( list_uris );
+use LWP 5.64;
 
-
-my $irc = new Net::IRC;
+my($businessChannel) = '#xomb';
+my($pleasureChannel) = '##l2l';
+my $mynick = shift || 'XOmBot';
 my $browser = LWP::UserAgent->new;
 my $commitid = "";
+my $first = 1;
 
-my $conn = $irc->newconn(
-	Server 		=> shift || 'irc.freenode.net',      # the network to connect to
-	Port		=> shift || '8001',                  # the port to use for the connection
-	Nick		=> 'XOmBot',
-	Ircname		=> 'Resident XOmbie',
-	Username	=> 'bot'
-);
+my $good = 0;
+my $bad = 0;
 
-$conn->{channel} = shift || '#xomb';                 # the channel to join on successful connect
+my ($bot) = Bot->new(
+		server => "irc.freenode.net",
+		port => "8001",
+		channels => [ $businessChannel, $pleasureChannel ],
+		nick => $mynick,
+		charset => 'utf-8',
+		);
 
+$bot->run();
 
-
-sub on_connect {
-
-	# shift in our connection object that is passed automatically
-	my $conn = shift;
-
-	$conn->join($conn->{channel});
-	$conn->privmsg($conn->{channel}, 'XOmBot is online. !commands will show what I can do.');
-	$conn->{connected} = 1;
+sub connected {
+		my $self = shift;
+		$self->say(channel => $_, body => "$mynick is online. !commands will show what I can do.") for (@{$self->{channels}});
 }
 
-sub on_public {
-
-	my ($conn, $event) = @_;
-
-	# grab what was said
-	my $text = $event->{args}[0];
-
-	if($text =~ m{(http://[^ ]*)})
-	{
-	  display_title($1);
-	}
-	
-	if ($text =~ m/^\!wiki\s*([\w*\s]*)/)
-	{
-		# check if article exists in the wiki
-		get_wiki_entry($1);
-	}
-
-	if($text eq "hi" and $event->{nick} eq "duckinator")
-	{
-		$conn->privmsg($conn->{channel}, "duckinator: hi");
-	}
-	
-	if($text =~ m/^\!latest.*/)
-	{
-		# show the latest commit the next loop around
-		$commitid = "";
-	}
-
-	if($text =~ m/^\!commands.*/)
-	{
-		# show all the commands that xombot listens to
-		$conn->privmsg($conn->{channel}, "!wiki [search term] - will search the wiki for the given word or phrase.");
-		$conn->privmsg($conn->{channel}, "!latest - will show the last commit to the offical XOmB repository.");
-	}
-	
-	if ($text =~ m/^XOmBot:.*/)
-	{
-		$conn->privmsg($conn->{channel}, "$event->{nick}: brains...");
-	}
-
+sub tick {
+		check_rss();
+		return 60;
 }
+
+sub said {
+		my $self = shift;
+		my $message = shift;
+		my $body = $message->{body};
+		my $nick = $message->{who};
+		my $channel = $message->{channel};
+		my $address = $message->{address};
+
+		# --- url announce ---
+		if(my @urls = list_uris($body)){
+				if($nick ne "github-xombot"){
+						$self->reply($message, title($_)) for (@urls);
+				}
+		}
+
+		# --- command list ---
+		if($body =~ m/^\!commands/){
+				# show all the commands that xombot listens to
+				$self->say(channel => $channel, body => "!wiki [search term] - will search the wiki for the given word or phrase.");
+				$self->say(channel => $channel, body => "!latest - will show the last commit to the offical XOmB repository.");
+				$self->say(channel => $channel, body => "!google [phrase] for [nick] - answer questions.");
+				$self->say(channel => $channel, body => "!coinflip - ...");
+				$self->say(channel => $channel, body => "!santa - ask Santa whether $mynick has been naughty or nice.");
+		}
+
+		if ($body =~ m/^\!wiki\s*([\w*\s]*)/){
+				# check if article exists in the wiki
+				get_wiki_entry($1, $channel);
+		}
+		
+		if($body =~ m/^\!latest/){
+				# show the latest commit the next loop around
+				$commitid = "";
+		}
+
+		if($body =~ m/^\!google (.*) for (.*)/){
+				my($term) = $1;
+				my($target) = $2;
+						
+				$term =~ s/ /+/g;
+						
+				$self->say(channel => $channel, who => $target, address => "1", body => "http://lmgtfy.com/?q=$term");
+		}
+
+		if($body =~ m/^\!coinflip/){
+				my $outcome;
+
+				if($body =~ m/^\!coinflip.* heads (.*) tails (.*)/){
+						$outcome = $1;
+						$outcome = $2 if int(rand(2)) == 1;
+				}else{
+						$outcome = "heads";
+						$outcome = "tails" if int(rand(2)) == 1;
+				}
+
+				#$self->say(channel => $channel, who => $nick, address => "1", body => "$outcome");
+				$self->say(channel => $channel, body => "$outcome");
+		}
+
+		if($body =~ m/^\!santa/){
+				if($good >= $bad){
+						$self->emote(channel => $channel, body => "has been a good little robotic zombie");
+				}else{
+						$self->emote(channel => $channel, body => "is getting coal in its metal stocking");
+				}
+		}
+
+		# --- miscellaneous behaviors ---
+
+		# annoy duck
+		if($body eq "hi" and $nick eq "duckinator"){
+				$self->say(channel => $channel, who => $nick, body => "hi", address => "1");
+		}
+
+		my($respondedFlag) = 0;
+
+		if ($address || $body =~ m/$mynick/){
+				my $compliment = $body;
+
+				if($compliment =~ m/good/i || $compliment =~ m/cookie/i || $compliment =~ m/<3/){
+						$self->emote(channel => $channel, body => "drools");
+
+						$good++;
+						$respondedFlag = 1;
+				}elsif($compliment =~ m/bad/i || $compliment =~ m/spank/i){
+						$self->emote(channel => $channel, body => "cowers");
+
+						$bad++;
+						$respondedFlag = 1;
+				}
+		}
+
+		if($address && !$respondedFlag){
+				$self->say(channel => $channel, who => $nick, address => "1", body => "brains...");
+		}
+
+		return undef;
+}
+
+sub check_rss {
+		my $response = $browser->get("http://github.com/feeds/xomboverlord/commits/xomb/unborn");
+
+		if($response->is_success && $response->content =~ m/<entry>\s*<id>.*\/(\w*)<\/id>/){
+				my $commiter = "Unknown";
+				my $commit_msg = "Unspecified";
+				my $orig_commitid = $commitid;			
+			
+				#if it's not the last one we announced
+				if($commitid ne $1){
+						$commitid = $1;
+				
+						# get try to get the info to announce it
+						if($response->content =~ m/<entry>.*?<title>(.*?)<\/title>/s){
+								$commit_msg = $1;
+						}
+
+						# get try to get the author to announce it
+						if($response->content =~ m/<name>(\w*)<\/name>/){
+								$commiter = $1;
+						}				
+				
+						if($commit_msg ne "Sorry, this commit log is taking too long to generate."){
+								unless($first){
+										$bot->say(channel => $businessChannel, body => "Commit made by $commiter: $commit_msg");
+										$bot->say(channel => $businessChannel, body => "View: http://github.com/xomboverlord/xomb/commit/$commitid");
+								}else{
+										$first = 0;
+								}
+						}else{
+								# we don't know if there actually was a new commit
+								$commitid = $orig_commitid;
+						}
+				}
+		}
+}
+
+
 
 sub get_wiki_entry {
-
 	my $articlename = shift;
-	
+	my $channel = shift;
+
 	#replace spaces with +
 	$articlename =~ s/\s/\+/gs;
 
@@ -114,49 +213,27 @@ sub get_wiki_entry {
 		# try to get a definition
 		if( $content =~ m/(.*?$articlename.*?\.)/i)
 		{
-			$conn->privmsg($conn->{channel}, $1);
+			$bot->say(channel => $channel, body => $1);
 		}
 
 		#replace spaces with _
 		$articlename =~ s/\s/_/gs;
 
-		$conn->privmsg($conn->{channel}, "Full article here: " . $response->base);
+		$bot->say(channel => $channel, body => "Full article here: " . $response->base);
 	}
 	else
 	{
-		$conn->privmsg($conn->{channel}, "Sorry, there's no article by that name");
+		$bot->say(channel => $channel, body => "Sorry, there's no article by that name");
 		# try to search for similar articles
-		search_for_article($articlename);
+		search_for_article($articlename, $channel);
 	}
 
-}
-
-sub display_title {
-  my $url = shift;
-		
-	my $response = $browser->get("$url");
-		
-	if($response->is_success)
-	{
-	  if($response->content =~ m/<title>(.+)<\/title>/si)
-		{
-			my($title) = $1;
-
-			$title =~ s/\s/ /gs;
-			$title =~ s/ +/ /gs;
-
-			$title =~ s/^ //;
-			$title =~ s/ $//;
-
-		  $conn->privmsg($conn->{channel}, "\"$title\"");	
-		}
-	}
 }
 
 sub search_for_article {
-
 	my $searchterm = shift;
-	
+	my $channel = shift;
+
 	# replace spaces with +
 	$searchterm =~ s/\s/\+/gs;
 	
@@ -166,69 +243,8 @@ sub search_for_article {
 	{
 		if($response->content =~ m/<li><a href="\/index\.php\?title=(\w*)/)
 		{
-			$conn->privmsg($conn->{channel}, "Did you mean $1: http://wiki.xomb.org/index.php?title=$1");	
+			$bot->say(channel => $channel, body => "Did you mean $1: http://wiki.xomb.org/index.php?title=$1");	
 		}
 	}
 
-}
-
-sub check_rss {
-
-	my $response = $browser->get("http://github.com/feeds/xomboverlord/commits/xomb/master");
-
-	if($response->is_success && $response->content =~ m/<entry>\s*<id>.*\/(\w*)<\/id>/)
-	{
-			my $commiter = "Unknown";
-			my $commit_msg = "Unspecified";
-			my $orig_commitid = $commitid;			
-			
-			#if it's not the last one we announced
-			if($commitid ne $1)
-			{
-
-				$commitid = $1;
-				
-				# get try to get the info to announce it
-				if($response->content =~ m/<entry>.*?<title>(.*?)<\/title>/s)
-				{
-					$commit_msg = $1;
-				}
-
-				# get try to get the author to announce it
-				if($response->content =~ m/<name>(\w*)<\/name>/)
-				{
-					$commiter = $1;
-				}				
-				
-				if($commit_msg ne "Sorry, this commit log is taking too long to generate.")
-				{
-					$conn->privmsg($conn->{channel}, "Commit made by $commiter: $commit_msg");
-					$conn->privmsg($conn->{channel}, "View: http://github.com/xomboverlord/xomb/commit/$commitid");
-				}
-				else
-				{
-					# we don't know if there actually was a new commit
-					$commitid = $orig_commitid;
-				}
-			}
-	}
-
-}
-
-
-
-$conn->add_handler('public', \&on_public);
-
-# The end of MOTD (message of the day), numbered 376 signifies we've connected
-$conn->add_handler('376', \&on_connect);
-
-
-# while bot is running ping the RSS and handle incoming commands
-while(1) {
-
-	
-	# check the RSS
-	check_rss();
-	
-	$irc->do_one_loop();
 }
