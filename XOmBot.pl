@@ -3,7 +3,7 @@
 #################################################################################
 # XomBot.pl [nick]                                                              #
 #                                                                               #
-# Your friendly XOmB bot for #xomb												#
+# Your friendly XOmB bot for #xomb                                              #
 #                                                                               #
 # This program is free software. It comes without any warranty, to the extent   #
 # permitted by applicable law. You can redistribute it and/or modify it under   #
