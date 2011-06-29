@@ -74,6 +74,7 @@ sub said {
 				$self->say(channel => $channel, body => "!google [phrase] for [nick] - answer questions. More bangs to shoot from the hip.");
 				$self->say(channel => $channel, body => "!coinflip - ...");
 				$self->say(channel => $channel, body => "!santa - ask Santa whether $mynick has been naughty or nice.");
+				$self->say(channel => $channel, body => "!d[n] - rolls die with n sides");
 		}
 
 		if ($body =~ m/^\!wiki\s*([\w*\s]*)/){
@@ -113,6 +114,11 @@ sub said {
 
 				#$self->say(channel => $channel, who => $nick, address => "1", body => "$outcome");
 				$self->say(channel => $channel, body => "$outcome");
+		}
+
+		# dice roll
+		if($body =~ m/^\!d(\d*)/){
+			$self->say(channel => $channel, body => int(rand($1)) + 1);
 		}
 
 		if($body =~ m/^\!santa/){

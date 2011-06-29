@@ -4,22 +4,26 @@
 XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
-* !wiki article name: will attempt to find a wiki article of that name and provide a definition
+* !wiki [article name]: will attempt to find a XOmB wiki article of that name and provide a definition
 * !latest: will provide information for the latest commit
-* !commands: will list the commands XOmBot listens for and what they do			
+* !commands: will list the commands XOmBot listens for and what they do
+* !google [phrase] for [nick]: Sends a lmgtfy.com link to nick 
+* !coinflip: flips a coin
+* !santa: Asks Santa if the bot has been naught or nice
+* !d[n]: rolls a die with n sides 			
 
-XOmBot has the following behaviours:
+XOmBot has the following behaviours in addition to the commands:
 
 * announces an applied commit to the main XOmB repo
 * informs the channel of the !commands command upon entering a channel
 * says "brains..." when directly refered to (ie: XOmBot: message)
 * displays the title of any valid http:// urls displayed in the channel
 
-
 ----
 
-A note about the Net::IRC module: 
+Requires: 
 
-There may be a warning on line 141 of IRC.pm because of the do_one_loop. Simply replace this line with the following:
+* Bot::BasicBot
+* URI::Title
+* URI::Find::Simple 
 
-<tt>return if defined($caller) and $caller eq 'Net::IRC::flush_output_queue';</tt>
