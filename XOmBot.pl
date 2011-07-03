@@ -117,7 +117,7 @@ sub said {
 		}
 
 		# dice roll
-		if($body =~ m/^\!d(\d*)/){
+		if($body =~ m/^\!d(\d+)/){
 			$self->say(channel => $channel, body => int(rand($1)) + 1);
 		}
 
