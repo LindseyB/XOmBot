@@ -7,10 +7,12 @@ Right now XOmBot accepts the following commands:
 * !wiki [article name]: will attempt to find a XOmB wiki article of that name and provide a definition
 * !latest: will provide information for the latest commit
 * !commands: will list the commands XOmBot listens for and what they do
-* !google [phrase] for [nick]: Sends a lmgtfy.com link to nick 
+* !google [phrase] for [nick]: Sends a lmgtfy.com link to nick
 * !coinflip: flips a coin
 * !santa: Asks Santa if the bot has been naught or nice
-* !d[n]: rolls a die with n sides 			
+* !d[n]: rolls a die with n sides
+* !joke: hear a funny joke
+* !answer: get the answer to the last funny joke
 
 XOmBot has the following behaviours in addition to the commands:
 
@@ -21,9 +23,9 @@ XOmBot has the following behaviours in addition to the commands:
 
 ----
 
-Requires: 
+Requires:
 
 * Bot::BasicBot
 * URI::Title
-* URI::Find::Simple 
+* URI::Find::Simple
 

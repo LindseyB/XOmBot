@@ -80,6 +80,8 @@ sub said {
     $self->say(channel => $channel, body => "!coinflip - ...");
     $self->say(channel => $channel, body => "!santa - ask Santa whether $mynick has been naughty or nice.");
     $self->say(channel => $channel, body => "!d[n] - rolls die with n sides");
+    $self->say(channel => $channel, body => "!joke - hear a funny joke");
+    $self->say(channel => $channel, body => "!answer - get the answer to the last funny joke");
   }
 
   if ($body =~ m/^\!wiki\s*([\w*\s]*)/){
