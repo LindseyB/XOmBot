@@ -20,6 +20,7 @@ use strict;
 use URI::Title qw( title );
 use URI::Find::Simple qw( list_uris );
 use LWP 5.64;
+use HTTP::Cookies;
 
 my($businessChannel) = '#xomb';
 my($pleasureChannel) = '##l2l';
@@ -31,10 +32,14 @@ my $first = 1;
 my $good = 0;
 my $bad = 0;
 
+# store jokes so we can get answers!
+my $joke   = "";
+my $answer = "";
+
 my ($bot) = Bot->new(
   server => "irc.freenode.net",
   port => "8001",
-  channels => [ "#XOmBot" ], #[ $businessChannel, $pleasureChannel , "##IwantAkitty", "#rstatus"],
+  channels => [ $businessChannel, $pleasureChannel , "##IwantAkitty", "#rstatus"],
   nick => $mynick,
   charset => 'utf-8',
 );
@@ -127,6 +132,34 @@ sub said {
     }else{
       $self->emote(channel => $channel, body => "is getting coal in its metal stocking");
     }
+  }
+
+  # jokes!
+  if($body =~ m/^\!joke/){
+    my $joke_domain = "http://www.abdn.ac.uk/jokingcomputer/webversion/";
+    my %joke_actions = ( start => "startFUN.php",
+                         new   => "getjokeFUN.php?class=any&subject=any",
+                         joke  => "fulldisplay.php" );
+
+    # setup cookies for these requests to use the joking computer
+    my $joke_cookie_jar = HTTP::Cookies->new;
+    $browser->cookie_jar($joke_cookie_jar);
+
+    my $response = $browser->get("$joke_domain$joke_actions{start}");
+
+    $browser->get("$joke_domain$joke_actions{new}");
+    $response = $browser->get("$joke_domain$joke_actions{joke}");
+
+    $response->content =~ m/jokermediumtext">(.*?)<br><br>(.*?)<\/div/;
+    $joke   = $1;
+    $answer = $2;
+    chop($answer); #we want to make our jokes more dramatic, see !answer
+
+    $bot->say(channel => $channel, body => $joke);
+  }
+
+  if($body =~ m/^\!answer/){
+    $bot->say(channel => $channel, body => "$answer! Oh ho ho ho... brains.");
   }
 
   # --- miscellaneous behaviors ---
