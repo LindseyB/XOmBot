@@ -1,13 +1,21 @@
 class Coinflip < XOmBot::Plugin
-  match "coinflip"
+  match /coinflip( (.+) or (.+))?/
   help "Flips a coin"
 
-  def execute(m)
+  def execute(m, whole = nil, heads = nil, tails = nil)
     result = rand(2)
     if result == 0
-      m.reply "heads"
+      if heads
+        m.reply heads
+      else
+        m.reply "heads"
+      end
     else
-      m.reply "tails"
+      if tails
+        m.reply tails
+      else
+        m.reply "tails"
+      end
     end
   end
 end
