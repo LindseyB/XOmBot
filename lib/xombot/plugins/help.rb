@@ -1,6 +1,8 @@
 class Help < XOmBot::Plugin
   match /help (.+)/
   help "Displays information on command arguments"
+  usage "help seen -- Query information about the seen command"
+  usage "help help -- Displays this thing you are reading"
 
   def execute(m, command)
     XOmBot.plugins.each do |p|
