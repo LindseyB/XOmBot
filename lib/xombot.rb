@@ -1,6 +1,9 @@
 require 'bundler'
 Bundler.require
 
+require 'fileutils'
+require 'yaml'
+
 # allow sending of actions
 module Cinch
   class Message
@@ -41,13 +44,25 @@ module XOmBot
     end
 
     def start
+      config_path = "#{File.dirname(__FILE__)}/../config"
+      if not File.exists?("#{config_path}/config.yml")
+        FileUtils.cp("#{config_path}/config.yml.example", "#{config_path}/config.yml")
+      end
+      config = YAML.load('../config/config.yml')
+
+      name = config["name"] || NAME
+      server = config["server"] || SERVER
+      port = config["port"] || PORT
+      ssl = (config["ssl"] == "true") || SSL
+      channels = config["channels"] || CHANNELS
+
       bot = Cinch::Bot.new do
         configure do |c|
-          c.server = SERVER
-          c.port = PORT
-          c.ssl.use = SSL
-          c.nick = NAME 
-          c.channels = CHANNELS
+          c.server = server
+          c.port = port
+          c.ssl.use = ssl
+          c.nick = name 
+          c.channels = channels
           c.plugins.plugins = XOmBot::Plugins.constants.map do |plugin|
             XOmBot::Plugins.const_get(plugin)
           end
