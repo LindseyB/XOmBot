@@ -1,7 +1,7 @@
 = XOmBot
 ----
 
-XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
+XOmBot is a simple IRC bot written in ruby meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
 * !wiki [article name]: will attempt to find a XOmB wiki article of that name and provide a definition
@@ -20,12 +20,3 @@ XOmBot has the following behaviours in addition to the commands:
 * informs the channel of the !commands command upon entering a channel
 * says "brains..." when directly refered to (ie: XOmBot: message)
 * displays the title of any valid http:// urls displayed in the channel
-
-----
-
-Requires:
-
-* Bot::BasicBot
-* URI::Title
-* URI::Find::Simple
-
