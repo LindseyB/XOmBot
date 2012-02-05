@@ -9,15 +9,20 @@ class Emotion < XOmBot::Plugin
   end
 
   def listen(m)
-    return unless m.message.match XOmBot.name
+    unless m.message.match /#{XOmBot.name}/i
+      if m.message.match /\bhugs\b/
+        m.emote "hugs #{m.user.nick}"
+        return
+      end
+    end
 
-    if m.message.match /good|cookie|<3/
+    if m.message.match /good|cookie|hugs|cake|nice|awesome|pets|kiss|<3/
       @good = @good + 1
       m.emote "drools"
       return
     end
 
-    if m.message.match /bad|spank/
+    if m.message.match /bad|spank|spit|shoot|slap|\:\(/
       @bad = @bad + 1
       m.emote "cowers"
       return
