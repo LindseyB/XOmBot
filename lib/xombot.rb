@@ -1,17 +1,11 @@
 require 'bundler'
 Bundler.require
 
-# Place all plugins into a module
-module XOmBot
-  module Plugins
-    require 'xombot/plugins/hello'
-    require 'xombot/plugins/commands'
-    require 'xombot/plugins/plugins'
+require 'xombot/plugin'
 
-    def self.const_missing(c)
-      Object.const_get(c)
-    end
-  end
+# Place all plugins into a module
+Dir[File.dirname(__FILE__) + '/xombot/plugins/*.rb'].each do |file|
+  eval "module XOmBot; module Plugins; #{File.read(file)}; end; end"
 end
 
 module XOmBot
@@ -34,11 +28,15 @@ module XOmBot
           c.ssl.use = true
           c.nick = "XOmBot-test"
           c.channels = ["#XOmBot"]
-          c.plugins.plugins = [
-            XOmBot::Plugins::Hello,
-            XOmBot::Plugins::Commands,
-            XOmBot::Plugins::Plugins
-          ]
+#          c.plugins.plugins = [
+#            XOmBot::Plugins::Hello,
+#            XOmBot::Plugins::Commands,
+#            XOmBot::Plugins::Joke,
+#            XOmBot::Plugins::Plugins
+#          ]
+          c.plugins.plugins = XOmBot::Plugins.constants.map do |plugin|
+            XOmBot::Plugins.const_get(plugin)
+          end
         end
       end
 
