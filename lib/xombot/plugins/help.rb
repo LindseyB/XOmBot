@@ -8,6 +8,7 @@ class Help < XOmBot::Plugin
       if not idx.nil?
         info = p.commands[p.commands.keys[idx]]
         m.reply "[#{command}] #{info[:help]}"
+        m.reply "Invoke as: #{p.commands.keys[idx].inspect.to_s[1..-2]}"
         if info[:usage]
           info[:usage].each do |usage|
             m.reply usage
