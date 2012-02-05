@@ -14,6 +14,7 @@ class Emotion < XOmBot::Plugin
         m.emote "hugs #{m.user.nick}"
         return
       end
+      return
     end
 
     if m.message.match /good|cookie|hugs|cake|nice|awesome|pets|kiss|<3/
