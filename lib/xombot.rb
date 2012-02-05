@@ -1,10 +1,28 @@
 require 'bundler'
 Bundler.require
 
-require 'xombot/plugins/hello'
+# Place all plugins into a module
+module XOmBot
+  module Plugins
+    require 'xombot/plugins/hello'
+    require 'xombot/plugins/commands'
+    require 'xombot/plugins/plugins'
+
+    def self.const_missing(c)
+      Object.const_get(c)
+    end
+  end
+end
 
 module XOmBot
   class << self
+    attr_reader :plugins
+
+    def add_plugin plugin
+      @plugins = [] if @plugins.nil?
+      @plugins << plugin
+    end
+
     def load_plugins
     end
 
@@ -16,7 +34,11 @@ module XOmBot
           c.ssl.use = true
           c.nick = "XOmBot-test"
           c.channels = ["#XOmBot"]
-          c.plugins.plugins = [Hello]
+          c.plugins.plugins = [
+            XOmBot::Plugins::Hello,
+            XOmBot::Plugins::Commands,
+            XOmBot::Plugins::Plugins
+          ]
         end
       end
 
