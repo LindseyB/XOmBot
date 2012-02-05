@@ -26,7 +26,7 @@ module XOmBot
     extend ModuleSet
 
     def commands
-      self.class.matches
+      self.class.matches || {}
     end
   end
 end
