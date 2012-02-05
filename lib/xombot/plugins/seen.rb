@@ -23,6 +23,7 @@ class Seen < XOmBot::Plugin
 
   match /seen (.+)/
   help "Reports the last moment a given person spoke"
+  usage "seen wilkie -- Reports the last moment wilkie spoke"
 
   def execute(m, nick)
     if nick == @bot.nick
