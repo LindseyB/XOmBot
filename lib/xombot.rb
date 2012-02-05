@@ -48,13 +48,15 @@ module XOmBot
       if not File.exists?("#{config_path}/config.yml")
         FileUtils.cp("#{config_path}/config.yml.example", "#{config_path}/config.yml")
       end
-      config = YAML.load('../config/config.yml')
+      config = YAML.load(File.open("#{config_path}/config.yml"))
+      puts config
 
       name = config["name"] || NAME
       server = config["server"] || SERVER
       port = config["port"] || PORT
       ssl = (config["ssl"] == "true") || SSL
       channels = config["channels"] || CHANNELS
+      puts channels
 
       bot = Cinch::Bot.new do
         configure do |c|
