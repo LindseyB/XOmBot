@@ -41,9 +41,6 @@ module XOmBot
       @plugins << plugin
     end
 
-    def load_plugins
-    end
-
     def start
       config_path = "#{File.dirname(__FILE__)}/../config"
       if not File.exists?("#{config_path}/config.yml")
@@ -59,11 +56,11 @@ module XOmBot
 
       bot = Cinch::Bot.new do
         configure do |c|
-          c.server = @server
-          c.port = @port
-          c.ssl.use = @ssl
-          c.nick = @name 
-          c.channels = @channels
+          c.server = XOmBot.server
+          c.port = XOmBot.port
+          c.ssl.use = XOmBot.ssl
+          c.nick = XOmBot.name 
+          c.channels = XOmBot.channels
           c.plugins.plugins = XOmBot::Plugins.constants.map do |plugin|
             XOmBot::Plugins.const_get(plugin)
           end
