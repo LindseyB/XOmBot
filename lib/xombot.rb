@@ -28,12 +28,6 @@ module XOmBot
           c.ssl.use = true
           c.nick = "XOmBot-test"
           c.channels = ["#XOmBot"]
-#          c.plugins.plugins = [
-#            XOmBot::Plugins::Hello,
-#            XOmBot::Plugins::Commands,
-#            XOmBot::Plugins::Joke,
-#            XOmBot::Plugins::Plugins
-#          ]
           c.plugins.plugins = XOmBot::Plugins.constants.map do |plugin|
             XOmBot::Plugins.const_get(plugin)
           end

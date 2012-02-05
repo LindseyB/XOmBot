@@ -1,6 +1,8 @@
 class Coinflip < XOmBot::Plugin
   match /coinflip( (.+) or (.+))?/
   help "Flips a coin"
+  usage "coinflip -- Returns either heads or tails"
+  usage "coinflip x or y -- Returns either x or y"
 
   def execute(m, whole = nil, heads = nil, tails = nil)
     result = rand(2)

@@ -18,8 +18,15 @@ module XOmBot
 
       def help m, *args
         @matches = {} unless @matches
-        @matches[@last_match] = m
-        super m, *args
+        @matches[@last_match] = {} unless @matches[@last_match]
+        @matches[@last_match][:help] = m
+      end
+
+      def usage m, *args
+        @matches = {} unless @matches
+        @matches[@last_match] = {} unless @matches[@last_match]
+        @matches[@last_match][:usage] = [] unless @matches[@last_match][:usage]
+        @matches[@last_match][:usage] << m
       end
     end
 
