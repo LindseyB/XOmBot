@@ -18,7 +18,12 @@ Dir[File.dirname(__FILE__) + '/xombot/plugins/*.rb'].each do |file|
 end
 
 module XOmBot
+  # Default Parameters
   NAME = "XOmBot-test"
+  CHANNELS = ["#XOmBot"]
+  SERVER = "irc.freenode.org"
+  PORT = 6697
+  SSL = true
 
   class << self
     attr_reader :plugins
@@ -38,11 +43,11 @@ module XOmBot
     def start
       bot = Cinch::Bot.new do
         configure do |c|
-          c.server = "irc.freenode.org"
-          c.port = 6697
-          c.ssl.use = true
+          c.server = SERVER
+          c.port = PORT
+          c.ssl.use = SSL
           c.nick = NAME 
-          c.channels = ["#XOmBot"]
+          c.channels = CHANNELS
           c.plugins.plugins = XOmBot::Plugins.constants.map do |plugin|
             XOmBot::Plugins.const_get(plugin)
           end
