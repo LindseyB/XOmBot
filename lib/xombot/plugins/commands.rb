@@ -5,7 +5,7 @@ class Commands < XOmBot::Plugin
   def execute(m)
     XOmBot.plugins.each do |p|
       p.commands.each do |k,v|
-        m.reply "!#{k} -- #{v}"
+        m.reply "!#{k.inspect.to_s[1..-2]} -- #{v}"
       end
     end
   end
