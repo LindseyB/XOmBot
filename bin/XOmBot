@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+$: << File.dirname(__FILE__) + '/../lib'
+
+require 'xombot'
+require 'xombot/cli'
+
+XOmBot::CLI.run
