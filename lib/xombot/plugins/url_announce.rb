@@ -4,7 +4,7 @@ class URLAnnounce < XOmBot::Plugin
   def listen(m)
     m.message.scan /https?:\/\/[\S]+/ do |url|
       page = Mechanize.new.get url
-      m.reply "Title: #{page.title}"
+      m.reply "Title: #{page.title.gsub(/\t|\r|\n/, " ").strip}"
     end
   end
 end
