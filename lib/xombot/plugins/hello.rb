@@ -1,6 +1,6 @@
-class Hello
-  include Cinch::Plugin
+require 'xombot/plugin'
 
+class Hello < XOmBot::Plugin
   match "hello"
   help "This command says hello."
 
