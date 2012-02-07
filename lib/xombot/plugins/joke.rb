@@ -7,7 +7,6 @@ class Joke < XOmBot::Plugin
 
   def initialize *args
     @agent = Mechanize.new
-    @agent.get "#{JOKE_DOMAIN}/#{JOKE_ACTIONS[:start]}"
 
     super *args
   end
@@ -19,6 +18,7 @@ class Joke < XOmBot::Plugin
   help "Gives you the answer"
 
   def tell_joke(m)
+    @agent.get "#{JOKE_DOMAIN}/#{JOKE_ACTIONS[:start]}"
     @agent.get "#{JOKE_DOMAIN}/#{JOKE_ACTIONS[:new]}"
     page = @agent.get "#{JOKE_DOMAIN}/#{JOKE_ACTIONS[:joke]}"
 
