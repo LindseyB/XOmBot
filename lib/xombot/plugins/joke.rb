@@ -7,6 +7,8 @@ class Joke < XOmBot::Plugin
 
   def initialize *args
     @agent = Mechanize.new
+    @joke = {}
+    @answer = {}
 
     super *args
   end
@@ -23,25 +25,25 @@ class Joke < XOmBot::Plugin
     page = @agent.get "#{JOKE_DOMAIN}/#{JOKE_ACTIONS[:joke]}"
 
     joke_div = page.search '//div[@class="jokermediumtext"]'
-    @joke = nil
-    @answer = nil
+    @joke[m.channel] = nil
+    @answer[m.channel] = nil
 
     # The joke and answer are separated by <br/>, so just 
     # enumerate the text of the div.
     joke_div.first.children.each do |c|
       if c.text?
-        if @joke.nil?
-          @joke = c.content
+        if @joke[m.channel].nil?
+          @joke[m.channel] = c.content
         else
-          @answer = c.content.chop
+          @answer[m.channel] = c.content.chop
         end
       end
     end
 
-    m.reply @joke
+    m.reply @joke[m.channel]
   end
 
   def tell_answer(m)
-    m.reply "#{@answer}! Oh ho ho ho... brains."
+    m.reply "#{@answer[m.channel]}! Oh ho ho ho... brains."
   end
 end
