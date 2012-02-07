@@ -33,7 +33,7 @@ class Joke < XOmBot::Plugin
         if @joke.nil?
           @joke = c.content
         else
-          @answer = c.content
+          @answer = c.content.chop
         end
       end
     end
@@ -42,6 +42,6 @@ class Joke < XOmBot::Plugin
   end
 
   def tell_answer(m)
-    m.reply @answer
+    m.reply "#{@answer}! Oh ho ho ho... brains."
   end
 end
