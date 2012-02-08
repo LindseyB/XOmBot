@@ -3,8 +3,8 @@ class Plugins < XOmBot::Plugin
 
   def execute(m)
     m.reply "Plugins:"
-    XOmBot::plugins.each do |p|
-      m.reply "-- #{p.class.name}"
+    XOmBot::plugins.keys.each do |p|
+      m.reply "-- #{p}"
     end
   end
 end

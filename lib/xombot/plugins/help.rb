@@ -5,7 +5,7 @@ class Help < XOmBot::Plugin
   usage "help help -- Displays this thing you are reading"
 
   def execute(m, command)
-    XOmBot.plugins.each do |p|
+    XOmBot.plugins.each do |_,p|
       idx = p.commands.keys.map{|c| c.inspect.to_s[1..-2][/\w+/]}.index command
       if not idx.nil?
         info = p.commands[p.commands.keys[idx]]

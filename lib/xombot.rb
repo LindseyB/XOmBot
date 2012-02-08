@@ -37,8 +37,8 @@ module XOmBot
     attr_reader :ssl
 
     def add_plugin plugin
-      @plugins = [] if @plugins.nil?
-      @plugins << plugin
+      @plugins = {} if @plugins.nil?
+      @plugins[plugin.class.name] = plugin
     end
 
     def start

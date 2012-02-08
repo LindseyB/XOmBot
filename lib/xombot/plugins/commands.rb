@@ -4,7 +4,7 @@ class Commands < XOmBot::Plugin
 
   def execute(m)
     commands = []
-    XOmBot.plugins.each do |p|
+    XOmBot.plugins.each do |_,p|
       p.commands.each do |k,v|
         short_name = k.inspect.to_s[1..-2][/\w+/]
         commands << short_name
