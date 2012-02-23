@@ -1,0 +1,5 @@
+server: irc.freenode.org
+port: 6697
+name: XOmBot-test
+channels: ["#XOmBot"]
+ssl: true
