@@ -30,10 +30,11 @@ class Dice < XOmBot::Plugin
     repeats.times do
       rolls.times do
         score = rand(sides.to_i) + 1
-        if offset_op
-          score = score.send(offset_op, offset.to_i)
-        end
         total += score
+      end
+
+      if offset_op
+        total = total.send(offset_op, offset.to_i)
       end
     end
 
