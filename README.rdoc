@@ -1,29 +1,21 @@
 = XOmBot
 ----
 
-XOmBot is a simple IRC bot written in perl meant to lurk in #xomb.
+XOmBot is a simple IRC bot written in ruby meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
-* !wiki [article name]: will attempt to find a XOmB wiki article of that name and provide a definition
-* !latest: will provide information for the latest commit
-* !commands: will list the commands XOmBot listens for and what they do
-* !google [phrase] for [nick]: Sends a lmgtfy.com link to nick 
+* !commands: will list the commands XOmBot listens for
+* !help [command]: queries what a command will do
+* !google [phrase] for [nick]: Sends a lmgtfy.com link to nick
 * !coinflip: flips a coin
 * !santa: Asks Santa if the bot has been naught or nice
-* !d[n]: rolls a die with n sides 			
+* !d[n]: rolls a die with n sides
+* !roll [n]d[n][[+|-]n]: rolls several dice with bonuses
+* !joke: hear a funny joke
+* !answer: get the answer to the last funny joke
 
 XOmBot has the following behaviours in addition to the commands:
 
-* announces an applied commit to the main XOmB repo
-* informs the channel of the !commands command upon entering a channel
 * says "brains..." when directly refered to (ie: XOmBot: message)
+* responds dumbly to social cues
 * displays the title of any valid http:// urls displayed in the channel
-
-----
-
-Requires: 
-
-* Bot::BasicBot
-* URI::Title
-* URI::Find::Simple 
-
