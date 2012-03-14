@@ -7,7 +7,7 @@ class Commands < XOmBot::Plugin
     XOmBot.plugins.each do |_,p|
       p.commands.each do |k,v|
         short_name = k.inspect.to_s[1..-2][/\w+/]
-        commands << short_name
+        commands << short_name unless commands.include?(short_name)
         if v[:help]
         #  m.reply "!#{} -- #{v[:help]}"
         end
