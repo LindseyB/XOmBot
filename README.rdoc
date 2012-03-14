@@ -13,6 +13,7 @@ Right now XOmBot accepts the following commands:
 * !roll [n]d[n][[+|-]n]: rolls several dice with bonuses
 * !joke: hear a funny joke
 * !answer: get the answer to the last funny joke
+* !tweet [id]: displays the tweet with that id
 
 XOmBot has the following behaviours in addition to the commands:
 
