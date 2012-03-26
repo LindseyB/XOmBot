@@ -9,10 +9,10 @@ class Tweet < XOmBot::Plugin
 
   def tweet_by_id(m, id)
     status = Twitter.status(id)
-    m.reply "@#{status.user.screen_name}: #{status.text}"
+    m.reply "@#{status.user.screen_name}: #{HTMLEntities.new.decode status.text}"
   end
 
   def tweet_by_username(m, username)
-   m.reply "@#{username}: #{Twitter.user_timeline(username).first.text}" 
+   m.reply "@#{username}: #{HTMLEntities.new.decode Twitter.user_timeline(username).first.text}" 
   end
 end
