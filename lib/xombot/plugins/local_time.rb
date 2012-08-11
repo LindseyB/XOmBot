@@ -1,3 +1,5 @@
+require 'uri'
+
 class LocalTime < XOmBot::Plugin
   TIME_QUERY_URL = "http://www.timeanddate.com/worldclock/results.html?query="
 
@@ -7,7 +9,7 @@ class LocalTime < XOmBot::Plugin
 
   def execute(m, place)
     @agent = Mechanize.new
-    page = @agent.get "#{TIME_QUERY_URL}#{place}"
+    page = @agent.get "#{TIME_QUERY_URL}#{URI.escape(place)}"
     current_time = page.search '//strong[@id="ct"]'
 
     m.reply "Time in #{place}: #{current_time.first.content}"
