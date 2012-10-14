@@ -5,7 +5,19 @@ module XOmBot
     def initialize *args
       # Register the plugin with XOmBot
       XOmBot.add_plugin self
+
+      # When all plugins are loaded, call setup on each
+      if XOmBot.plugins.count == XOmBot::Plugins.constants.count
+        XOmBot.plugins.each do |k, v|
+          v.setup
+        end
+      end
+
       super *args
+    end
+
+    # Called after all plugins have been loaded and initialized
+    def setup
     end
 
     module ModuleSet
