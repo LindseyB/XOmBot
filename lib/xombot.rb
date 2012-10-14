@@ -38,7 +38,8 @@ module XOmBot
 
     def add_plugin plugin
       @plugins = {} if @plugins.nil?
-      @plugins[plugin.class.name] = plugin
+      plugin_name = plugin.class.name[/^XOmBot::Plugins::(.*)/, 1]
+      @plugins[plugin_name] = plugin
     end
 
     def start

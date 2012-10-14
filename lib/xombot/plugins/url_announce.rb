@@ -2,7 +2,7 @@ class URLAnnounce < XOmBot::Plugin
   listen_to :channel
 
   def listen(m)
-    ignore_plugin = XOmBot.plugins["XOmBot::Plugins::Ignore"]
+    ignore_plugin = XOmBot.plugins["Ignore"]
     return if ignore_plugin and ignore_plugin.ignored.include? m.user.nick
 
     m.message.scan /https?:\/\/[\S]+/ do |url|
