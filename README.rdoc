@@ -14,6 +14,7 @@ Right now XOmBot accepts the following commands:
 * !joke: hear a funny joke
 * !answer: get the answer to the last funny joke
 * !tweet [id]: displays the tweet with that id
+* !aww, !corgi, !kitty, !puppy: find a cute picture from imgur
 
 XOmBot has the following behaviours in addition to the commands:
 
