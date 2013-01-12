@@ -9,6 +9,15 @@ class Emotion < XOmBot::Plugin
   end
 
   def listen(m)
+    # Sometimes XOmBot overhears things intended for others
+    unless m.message.match /#{XOmBot.name}/i
+      if m.message.match /\bhugs\b/
+        m.emote "hugs #{m.user.nick}"
+      end
+
+      return
+    end
+
     # XOmBot does not appreciate being looked down upon
     if m.message.match /\bfuck you\b/
       m.reply m.message.gsub(/#{XOmBot.name}/i, m.user.nick).gsub(/fuck you/i, "fuck you too")
