@@ -11,10 +11,6 @@ class Emotion < XOmBot::Plugin
   def listen(m)
     # Sometimes XOmBot overhears things intended for others
     unless m.message.match /#{XOmBot.name}/i
-      if m.message.match /\bhugs\b/
-        m.emote "hugs #{m.user.nick}"
-      end
-
       return
     end
 
