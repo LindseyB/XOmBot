@@ -52,7 +52,7 @@ module XOmBot
       @name = config["name"] || NAME
       @server = config["server"] || SERVER
       @port = config["port"] || PORT
-      @ssl = (config["ssl"] == "true") || SSL
+      @ssl = (config["ssl"] == "true")
       @channels = config["channels"] || CHANNELS
 
       bot = Cinch::Bot.new do
