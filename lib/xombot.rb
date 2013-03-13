@@ -26,7 +26,6 @@ module XOmBot
   CHANNELS = ["#XOmBot"]
   SERVER = "irc.freenode.org"
   PORT = 6697
-  SSL = true
 
   class << self
     attr_reader :plugins
