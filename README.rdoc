@@ -1,7 +1,7 @@
 = XOmBot
 ----
 
-XOmBot is a simple IRC bot written in ruby meant to lurk in #xomb.
+XOmBot is a IRC bot written in ruby meant to lurk in #xomb.
 Right now XOmBot accepts the following commands:
 
 * !commands: will list the commands XOmBot listens for
@@ -14,10 +14,16 @@ Right now XOmBot accepts the following commands:
 * !joke: hear a funny joke
 * !answer: get the answer to the last funny joke
 * !tweet [id]: displays the tweet with that id
-* !aww, !corgi, !kitty, !puppy: find a cute picture from imgur
+* !rstatus [id]: displays the rstatus update with that id
+* !aww, !corgi, !kitty, !puppy, !capybara: find a cute picture from imgur
+* !define [word]: will attempt to define a given word
+* !hello: will respond in kind
+* !seen [person]: reports the last moment a given person spoke
+* !time [location]: gives the local time in the given city
+* !weather [expression]: gives the forecast for the given city
 
-XOmBot has the following behaviours in addition to the commands:
+XOmBot has the following behaviors in addition to the commands:
 
-* says "brains..." when directly refered to (ie: XOmBot: message)
+* says "brains..." when mentioned
 * responds dumbly to social cues
 * displays the title of any valid http:// urls displayed in the channel
