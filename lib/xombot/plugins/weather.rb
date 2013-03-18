@@ -10,12 +10,12 @@ class Weather < XOmBot::Plugin
     @agent = Mechanize.new
     page = @agent.get "#{WEATHER_QUERY_URL}#{place}"
     current_weather = page.search '//span[@itemprop="temperature-fahrenheit"]'
-    current_phrase  = page.search '//span[@itemprop="weather-phrase"]'
+    current_phrase  = page.search '//div[@class="wx-phrase "]'
 
     if option == "hourly"
       hourly_url = page.search '//a[@from="rightnow_1"]'
       if hourly_url.first.nil?
-        hourly_url = page.search '//a[@from="rightnow_TimeNav_weather_nav"][@title="Hourly"]'
+        hourly_url = page.search '//a[@from="today_TimeNav_weather_nav"][@title="Hourly"]'
       end
 
       if hourly_url.first.nil?
@@ -30,21 +30,22 @@ class Weather < XOmBot::Plugin
       parts.insert(0, page.search('//div[@class="wx-timepart wx-first"]'))
 
       reply_string = parts.inject("") do |a, part|
-        hour = part.children[1].children[0].content.to_i
-        meridian = part.children[1].children[1].content.strip
+        hour = part.children[1].children[0].text.to_i
+        meridian = part.children[1].children[1].text.strip
         if meridian.upcase == "PM"
           hour += 12
         end
-        temp = part.children[3].children[2].content.strip.to_i
-        phrase = part.children[3].children[4].content
+        temp = part.children[3].children[2].text.strip.to_i
+        phrase = part.children[3].children[4].text
         temp_cel = (temp - 32) * 5 / 9
         "#{a} #{hour}:00: #{temp}\u00b0F/#{temp_cel}\u00b0C/#{phrase}"
       end
       m.reply "#{place} by hour:#{reply_string}"
     else
-      temp = current_weather.first.content.to_i
+      puts current_phrase
+      temp = current_weather.first.text.to_i
       temp_cel = (temp - 32) * 5 / 9
-      m.reply "Weather in #{place}: #{temp}\u00b0F/#{temp_cel}\u00b0C and #{current_phrase.first.content}"
+      m.reply "Weather in #{place}: #{temp}\u00b0F/#{temp_cel}\u00b0C and #{current_phrase.first.text}"
     end
   end
 end
