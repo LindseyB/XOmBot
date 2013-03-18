@@ -42,7 +42,6 @@ class Weather < XOmBot::Plugin
       end
       m.reply "#{place} by hour:#{reply_string}"
     else
-      puts current_phrase
       temp = current_weather.first.text.to_i
       temp_cel = (temp - 32) * 5 / 9
       m.reply "Weather in #{place}: #{temp}\u00b0F/#{temp_cel}\u00b0C and #{current_phrase.first.text}"
