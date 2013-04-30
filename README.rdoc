@@ -21,6 +21,7 @@ Right now XOmBot accepts the following commands:
 * !seen [person]: reports the last moment a given person spoke
 * !time [location]: gives the local time in the given city
 * !weather [expression]: gives the forecast for the given city
+* !m [name]: gives a little motivational love: You're doing good work, name!
 
 XOmBot has the following behaviors in addition to the commands:
 
