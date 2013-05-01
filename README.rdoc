@@ -22,6 +22,7 @@ Right now XOmBot accepts the following commands:
 * !time [location]: gives the local time in the given city
 * !weather [expression]: gives the forecast for the given city
 * !m [name]: gives a little motivational love: You're doing good work, name!
+* !h5 [name]: gives name a high five!
 
 XOmBot has the following behaviors in addition to the commands:
 
