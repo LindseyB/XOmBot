@@ -4,7 +4,7 @@ class Tweet < XOmBot::Plugin
   match /tweet (\d+)/, :method => :tweet_by_id
   help "Displays the tweet with the given id"
   usage "tweet 12345678 -- displays the twitter update with that id"
-  
+
   match /tweet (\w.*)/, :method => :tweet_by_username
   help "Displays the latest tweet by the given user"
   usage "tweet noob -- displays the last tweet by noob"
@@ -32,6 +32,6 @@ class Tweet < XOmBot::Plugin
 
   def tweet_by_url(m, url)
     doc = Nokogiri::HTML(open(url))
-    m.reply "#{doc.css('.permalink-tweet-container .username.js-action-profile-name').first.text}: #{doc.css('.tweet-text').first.text}"
+    m.reply "#{doc.css('.permalink-tweet-container .username.js-action-profile-name').first.text}: #{doc.css('.permalink-tweet-container .tweet-text').first.text}"
   end
 end
