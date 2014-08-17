@@ -34,6 +34,7 @@ module XOmBot
     attr_reader :channels
     attr_reader :port
     attr_reader :ssl
+    attr_reader :imgur_client_id
 
     def add_plugin plugin
       @plugins = {} if @plugins.nil?
@@ -53,6 +54,7 @@ module XOmBot
       @port = config["port"] || PORT
       @ssl = config["ssl"] ? config["ssl"] : true
       @channels = config["channels"] || CHANNELS
+      @imgur_client_id = config["imgur_client_id"]
 
       bot = Cinch::Bot.new do
         configure do |c|

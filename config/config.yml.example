@@ -3,3 +3,4 @@ port: 6697
 name: XOmBot-test
 channels: ["#XOmBot"]
 ssl: true
+imgur_client_id: CLIENT_ID
