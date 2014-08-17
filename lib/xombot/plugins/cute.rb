@@ -1,6 +1,6 @@
 class Cute < XOmBot::Plugin
-  CUTE_IDS     = %w[aww corgi kitty   puppy   capybara]
-  CUTE_SOURCES = %w[aww corgi kittens puppies capybara]
+  CUTE_IDS     = %w[aww corgi kitty   puppy   capybara sloth  guinea-pig bunny]
+  CUTE_SOURCES = %w[aww corgi kittens puppies capybara sloths guineapigs rabbits]
 
   def initialize *args
     @agent  = Mechanize.new { |agent|

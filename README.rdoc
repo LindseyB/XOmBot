@@ -15,7 +15,7 @@ Right now XOmBot accepts the following commands:
 * !answer: get the answer to the last funny joke
 * !tweet [id]: displays the tweet with that id
 * !rstatus [id]: displays the rstatus update with that id
-* !aww, !corgi, !kitty, !puppy, !capybara: find a cute picture from imgur
+* !aww, !corgi, !kitty, !puppy, !capybara, !sloth, !guinea-pig, !bunny: find a cute picture from imgur
 * !define [word]: will attempt to define a given word
 * !hello: will respond in kind
 * !seen [person]: reports the last moment a given person spoke
