@@ -3,7 +3,9 @@ class Cute < XOmBot::Plugin
   CUTE_SOURCES = %w[aww corgi kittens puppies capybara]
 
   def initialize *args
-    @agent  = Mechanize.new
+    @agent  = Mechanize.new { |agent|
+      agent.request_headers = {"Authorization" => "Client-ID #{XOmBot.imgur_client_id}"}
+    }
     @cuties = {}
     CUTE_SOURCES.each do |source|
       @cuties[source] = []
@@ -26,16 +28,21 @@ class Cute < XOmBot::Plugin
   end
 
   def get_cuteness(type)
-    return @cuties[type].pop unless @cuties[type].empty?
+    begin
+      return @cuties[type].pop unless @cuties[type].empty?
 
-    subreddit = type
-    sitename  = "http://imgur.com/r/#{subreddit}.json"
-    content   = JSON.parse(@agent.get(sitename).body)
+      subreddit = type
+      sitename  = "https://api.imgur.com/3/gallery/r/#{subreddit}.json"
+      content   = JSON.parse(@agent.get(sitename).body)
 
-    content["data"].each do |data|
-      @cuties[type] << "http://imgur.com/#{data["hash"]} - #{data["title"]}"
+      content["data"].each do |data|
+        @cuties[type] << "http://imgur.com/#{data["id"]} - #{data["title"]}"
+      end
+
+      @cuties[type].pop
+
+    rescue Mechanize::Error => e
+      "no braaaaaaaiiiiiins #{e}"
     end
-
-    @cuties[type].pop
   end
 end
