@@ -12,7 +12,7 @@ class Weather < XOmBot::Plugin
 
     # unfortunately their 404 page returns 200 :(
     if page.at('body').text.include? "Error 404: Page Not Found"
-      m.reply "Unable to weather for #{place}, are you sure it exists?"
+      m.reply "Unable to get the weather for #{place}, are you sure it exists?"
     elsif page.at('body').attr('class').include? "not-set"
       m.reply "Ambiguous location, can you be more specific?"
     else
