@@ -1,5 +1,5 @@
 source :rubygems
-gem "cinch", "~> 1.1.3"
+gem "cinch", "~> 2.3.4"
 gem "mechanize"
 gem "nokogiri"
 gem "htmlentities"
